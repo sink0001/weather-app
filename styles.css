@@ -13,7 +13,7 @@ body {
     align-items: center;
 }
 
-.weatherForm  {
+.weather_form  {
     margin: 20px;
 }
 
@@ -73,7 +73,7 @@ p {
     margin: 5px 0;
 }
 
-.city_display, .tempDisplay {
+.city_display, .temperature {
     font-size: 3.5rem;
     font-weight: bold;
     color: hsla(0, 0%, 0%, 0.8);

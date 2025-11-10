@@ -9,8 +9,14 @@ weather_form.addEventListener("submit", async event => {
     event.preventDefault(); // forms auto refresh pages but we don't want that
     const city = city_input.value;
     if (city) {
-        const weather_data = await get_weather_data(city);
-        display_weather_info(weather_data);
+        try {
+            const weather_data = await get_weather_data(city);
+            display_weather_info(weather_data);
+        }
+        catch (error) {
+            console.error(error);
+            display_error(error);
+        }
     }
     else {
         display_error("Please enter a city");
@@ -50,11 +56,62 @@ function kelvin_to_degrees(kelvin_temp) {
 
 function display_weather_info(info) {
     console.log(info)
+    const city = info["name"]
+    let temp = info["main"]["temp"];
+    temp = Math.round(kelvin_to_degrees(temp));
+    const humidity = info["main"]["humidity"];
+    const weather_summary = info["weather"][0]["description"]
+    const weather_emoji_id = info["weather"][0]["id"]
+    
+    card.textContent = ""
+    card.style.display = "flex";
+
+    const city_display = document.createElement("h1")
+    city_display.textContent = city
+    city_display.className = "city_display"
+    card.appendChild(city_display)
+
+    const temp_display = document.createElement("p")
+    temp_display.textContent = `${temp}°C`
+    temp_display.className = "temperature"
+    card.appendChild(temp_display)
+
+    const humidity_display = document.createElement("p")
+    humidity_display.textContent = `humidity: ${humidity}%`
+    humidity_display.className = "humidity"
+    card.appendChild(humidity_display)
+
+    const weather_summary_display = document.createElement("p")
+    weather_summary_display.textContent = weather_summary
+    weather_summary_display.className = "weather_summary"
+    card.appendChild(weather_summary_display)
+
+    const weather_emoji_display = document.createElement("p")
+    weather_emoji_display.textContent = get_weather_emoji(weather_emoji_id)
+    weather_emoji_display.className = "weather_emoji"
+    card.appendChild(weather_emoji_display)
 }
 
 
-function get_weather_emoji(weather) {
-
+function get_weather_emoji(id) {
+    switch(true){
+        case (id >= 200 && id < 300):
+            return "⛈";
+        case (id >= 300 && id < 400):
+            return "🌧";
+        case (id >= 500 && id < 600):
+            return "🌧";
+        case (id >= 600 && id < 700):
+            return "❄️";
+        case (id >= 700 && id < 800):
+            return "🌫";
+        case (id === 800):
+            return "☀️";
+        case (id >= 801 && id < 810):
+            return "☁";
+        default:
+            return "❓";
+    }
 }
 
 
